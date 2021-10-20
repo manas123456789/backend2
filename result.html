@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>our result end</title>
+</head>
+<style>
+    h1 {
+        background-color: black;
+        color: white;
+        text-align: center;
+    }
+
+    .container {
+        background-color: pink;
+    }
+
+    input[type=text] {
+        border-radius: 50px;
+        border: 2px solid red;
+    }
+    #searchBtn{
+        background-color: green;
+        border:2px solid red;
+        border-radius: 50px;
+        font-size: 10px;
+        font-style: italic;
+        font-weight: bold;
+    }
+    #searchBtn:hover{
+        cursor: pointer;
+        background-color: rgb(197, 82, 59);
+        font-size: 20px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+    }
+    body{
+        font-family: cursive;
+        font-weight: bolder;
+    }
+    th{
+        font-size: medium;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: normal;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            url: "<%=new URLConstant().GET_LOCATION%>",
+            type: "GET",
+            async: false,
+            success: function (data) {
+                console.log("dada---" + JSON.stringify(data))
+                var selectHtml = "";
+                var index = 0;
+                selectHtml = selectHtml + "<option value=\"\">Select Location</option>";
+                jQuery.map(data.resObject, function (key, value) {
+
+                    selectHtml = selectHtml + "<option value=\"" + data.resObject[index].id + "\">" + data.resObject[index].Location + "</option>";
+                    //selectHtml = selectHtml + "<option value=\""+"\">"  + data.resObject[index].Location_Name +"</option>";
+                    index++;
+                });
+                jQuery("#location").html(selectHtml);
+            },
+            error: function (data) {
+                var selectHtml = "<option value=\"\">Select</option>";
+                jQuery("#location").html(selectHtml);
+
+            }
+        });
+
+        $.ajax({
+            url: "<%=new URLConstant().GET_ASSET_CATEGORY%>",
+            type: "GET",
+            async: false,
+            success: function (data) {
+
+                var selectHtml = "";
+                var index = 0;
+                selectHtml = selectHtml + "<option value=\"\">Select Asset Category</option>";
+                jQuery.map(data.resObject, function (key, value) {
+
+                    selectHtml = selectHtml + "<option value=\"" + data.resObject[index].Asset_Cat_id + "\">" + data.resObject[index].asset_name + "</option>";
+
+                    index++;
+                });
+                jQuery("#assettype").html(selectHtml);
+            },
+            error: function (data) {
+                var selectHtml = "<option value=\"\">Select</option>";
+                jQuery("#assettype").html(selectHtml);
+
+            }
+        });
+
+
+
+        $("#assettype").change(function (e) {
+            $.ajax({
+                url: "<%=new URLConstant().GET_ASSET_SUB_CATEGORY%>",
+                type: "GET",
+                async: false,
+                data: "asset_category=" + $("#assettype").val(),
+                success: function (data) {
+
+                    var selectHtml = "";
+                    var index = 0;
+                    selectHtml = selectHtml + "<option value=\"\">Select Asset Sub Category</option>";
+                    jQuery.map(data.resObject, function (key, value) {
+
+                        selectHtml = selectHtml + "<option value=\"" + data.resObject[index].assetsub_id + "\">" + data.resObject[index].asset_name + "</option>";
+
+                        index++;
+                    });
+                    jQuery("#subcat").html(selectHtml);
+                },
+                error: function (data) {
+                    var selectHtml = "<option value=\"\">Select</option>";
+                    jQuery("#subcat").html(selectHtml);
+
+                }
+            });
+        });
+
+
+        $.ajax({
+            url: "<%=new URLConstant().GET_ASSET_STATUS%>",
+            type: "GET",
+            async: false,
+            success: function (data) {
+
+                var selectHtml = "";
+                var index = 0;
+                selectHtml = selectHtml + "<option value=\"\">Select Asset Status</option>";
+                jQuery.map(data.resObject, function (key, value) {
+
+                    selectHtml = selectHtml + "<option value=\"" + data.resObject[index].assetstatus_id + "\">" + data.resObject[index].status_name + "</option>";
+
+                    index++;
+                });
+                jQuery("#Status").html(selectHtml);
+            },
+            error: function (data) {
+                var selectHtml = "<option value=\"\">Select</option>";
+                jQuery("#Status").html(selectHtml);
+
+            }
+        });
+
+
+        $("#subcat").change(function (e) {
+            $.ajax({
+                url: "<%=new URLConstant().GET_MANUFACTURER%>",
+                type: "GET",
+                async: false,
+                data: "sub_category=" + $("#subcat").val(),
+                success: function (data) {
+
+                    var selectHtml = "";
+                    var index = 0;
+                    selectHtml = selectHtml + "<option value=\"\">Select Manufacturer</option>";
+                    jQuery.map(data.resObject, function (key, value) {
+
+                        selectHtml = selectHtml + "<option value=\"" + data.resObject[index].manufacturer_id + "\">" + data.resObject[index].manufacturer_name + "</option>";
+
+                        index++;
+                    });
+                    jQuery("#Manufacturer").html(selectHtml);
+                },
+                error: function (data) {
+                    var selectHtml = "<option value=\"\">Select</option>";
+                    jQuery("#Manufacturer").html(selectHtml);
+
+                }
+
+            });
+
+        });
+
+        $("#Manufacturer").change(function (e) {
+
+            $.ajax({
+                url: "<%=new URLConstant().GET_MODEL%>",
+                type: "GET",
+                async: false,
+                data: "manufacturer=" + $("#Manufacturer").val(),
+                success: function (data) {
+
+                    var selectHtml = "";
+                    var index = 0;
+                    selectHtml = selectHtml + "<option value=\"\">Select Model</option>";
+                    jQuery.map(data.resObject, function (key, value) {
+
+                        selectHtml = selectHtml + "<option value=\"" + data.resObject[index].model_id + "\">" + data.resObject[index].model_name + "</option>";
+
+                        index++;
+                    });
+                    jQuery("#Model").html(selectHtml);
+                },
+                error: function (data) {
+                    var selectHtml = "<option value=\"\">Select</option>";
+                    jQuery("#Model").html(selectHtml);
+
+                }
+
+            });
+
+        });
+
+
+
+        $.ajax({
+            url: "<%=new URLConstant().GET_USER%>",
+            type: "GET",
+            async: false,
+            success: function (data) {
+
+                var selectHtml = "";
+                var index = 0;
+                selectHtml = selectHtml + "<option value=\"\">Select User</option>";
+                jQuery.map(data.resObject, function (key, value) {
+
+                    selectHtml = selectHtml + "<option value=\"" + data.resObject[index].user_id + "\">" + data.resObject[index].user_name + "</option>";
+
+                    index++;
+                });
+                jQuery("#user").html(selectHtml);
+            },
+            error: function (data) {
+                var selectHtml = "<option value=\"\">Select</option>";
+                jQuery("#user").html(selectHtml);
+
+            }
+
+        });
+
+
+        $.ajax({
+            url: "<%=new URLConstant().ASSET_INCHARGE%>",
+            type: "GET",
+            async: false,
+            success: function (data) {
+
+                var selectHtml = "";
+                var index = 0;
+                selectHtml = selectHtml + "<option value=\"\">Select Asset Incharge</option>";
+                jQuery.map(data.resObject, function (key, value) {
+
+                    selectHtml = selectHtml + "<option value=\"" + data.resObject[index].user_id + "\">" + data.resObject[index].user_name + "</option>";
+
+                    index++;
+                });
+                jQuery("#Incharge").html(selectHtml);
+            },
+            error: function (data) {
+                var selectHtml = "<option value=\"\">Select</option>";
+                jQuery("#Incharge").html(selectHtml);
+
+            }
+        });
+
+
+        $("#searchBtn").click(function () {
+            //alert("44646");
+            var subcat = $("#subcat").val();
+            var assetname = $("#assetname").val();
+
+            var location = $("#location").val();
+            var Status = $("#Status").val();
+            var serialno = $("#serialno").val();
+            var inventoryno = $("#inventoryno").val();
+            var Incharge = $("#Incharge").val();
+            var Manufacturer = $("#Manufacturer").val();
+            var Model = $("#Model").val();
+            var GRN = $("#GRN").val();
+            var user = $("#user").val();
+            var asset_type = $("#assettype").val();
+
+
+            $("#makeEditable").dataTable().fnDestroy();
+            $('#makeEditable').DataTable({
+                ajax: function (data, callback, settings) {
+                    //debugger;
+                    $.ajax(
+                        {
+                            url: "<%=new URLConstant().GET_ASSET_DETAILS%>?asset_name=" + assetname + "&asset_category=" + asset_type + "&asset_subcategory=" + subcat + "&Location=" + location + "&serial_number=" + serialno + "&asset_incharge=" + Incharge + "&asset_status=" + Status + "&manufacturer=" + Manufacturer + "&model=" + Model + "&GRN=" + GRN + "&inventory_no=" + inventoryno + "&user=" + user,
+                            type: "GET",
+
+                            dataType: "json"
+                        }).done(function (response) {
+
+                            callback(
+                                {
+                                    draw: response.draw,
+                                    data: response.resObject,
+                                    recordsTotal: response.resObject,
+                                    recordsFiltered: response.searchCount
+                                }
+                            );
+
+                        }).fail(function (err) {
+                            console.error('error...', err)
+                        })
+                },
+
+                "scrollX": true,
+                "scrollY": "200px",
+                "dom": "Blfrtip",
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "buttons": [
+                    {
+                        extend: 'excelHtml5',
+                        className: 'btn-sm btn-success',
+                        exportOptions: {
+                            columns: ['0,1,2,3,4,5,6,7,8']
+                        }
+                    },
+                ],
+                columns: [
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { "data": "Asset_Name" },
+                    { "data": "asset_type" },
+                    { "data": "Serial_Number" },
+                    { "data": "Inventory_No" },
+                    { "data": "user_name" },
+                    { "data": "manufacturer_name" },
+                    { "data": "model_name" },
+                    { "data": "status_name" }
+
+
+                ]
+            });
+            alert("Check below for the results!");
+
+            $("#tableDiv").css('display', 'block');
+        });
+
+
+    });
+
+
+
+</script>
+
+
+<body>
+
+    <h1>Our result end</h1>
+    <div class="container">
+        <div style="width:30%;float:left;border:0px solid red;padding-left:10px">
+
+        </div>
+    </div>
+    <div class="container" style="margin:0 auto;font-size:0.75em">
+        <div class="span12">
+
+
+
+            <table class="table data-table">
+
+
+                <tr>
+                    <td><label>Asset Type</label></td>
+                    <td>
+                        <select id="assettype" name="assettype" class="customSelect" style="margin-top:5px;height:30px">
+                            <option value="">All</option>
+                        </select>
+                    </td>
+
+                    <td>
+
+                    </td>
+                    <td><label>Asset Sub Category</label></td>
+
+                    <td>
+                        <select id="subcat" name="subcat" class="customSelect" style="margin-top:5px;height:30px">
+                            <option value="">All</option>
+
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label>Asset Name*</label></td>
+                    <td>
+                        <input type="text" id="assetname" name="assetname" class="customSelect"
+                            style="margin-top:5px;height:30px" placeholder="Enter asset name...">
+
+                    </td>
+
+                    <td>
+
+                    </td>
+
+                    <td><label>Location</label></td>
+                    <td>
+                        <select id="location" name="location" class="customSelect" style="margin-top:5px;height:30px">
+                            <option value="">All</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label>Serial Number*</label></td>
+                    <td>
+                        <input type="text" id="serialno" name="serialno" class="customSelect"
+                            style="margin-top:5px;height:30px" placeholder="Enter serial number...">
+
+                    </td>
+                    <td>
+
+                    </td>
+
+
+                    <td><label>Inventory Number*</label></td>
+                    <td>
+                        <input type="text" id="inventoryno" name="inventoryno" class="customSelect"
+                            style="margin-top:5px;height:30px" placeholder="Enter inventory number....">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label>Incharge</label></td>
+                    <td>
+                        <select id="Incharge" name="Incharge" class="customSelect" style="margin-top:5px;height:30px">
+                            <option value="">All</option>
+                        </select>
+                    </td>
+                    <td>
+
+                    </td>
+
+
+                    <td><label>Status</label></td>
+                    <td>
+                        <select id="Status" name="status" class="customSelect" style="margin-top:5px;height:30px">
+                            <option value="">All</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label>Manufacturer</label></td>
+                    <td>
+                        <select id="Manufacturer" name="Manufacturer" class="customSelect"
+                            style="margin-top:5px;height:30px">
+                            <option value="">All</option>
+                        </select>
+                    </td>
+                    <td>
+
+                    </td>
+                    <td><label>Model</label></td>
+                    <td>
+                        <select id="Model" name="Model" class="customSelect" style="margin-top:5px;height:30px">
+                            <option value="">All</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label>User</label></td>
+                    <td>
+                        <select id="user" name="user" class="customSelect" style="margin-top:5px;height:30px">
+                            <option value="">All</option>
+                        </select>
+                    </td>
+                    <td>
+
+                    </td>
+                    <td><label>Quantity</label></td>
+                    <td>
+                        <input type="text" id="QUANTITY" name="QUANTITY" class="customSelect" style="margin-top:5px;height:30px"
+                            placeholder="Enter Quantity...">
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        <input type="button" name="searchBtn" id="searchBtn"
+                            style="width:100px;height:35px;outline:none" value="Search" class="btn btn-success">
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    <div class="span12" id="tableDiv">
+        <table class="table table-hover table-striped table-bordered responsive" id="makeEditable"
+            style="overflow: auto; font-size: 0.6em;">
+            <thead>
+                <tr style="background: #6b6164; color: #fff; font-weight: 800;">
+                    <th style="white-space: nowrap;">Sl No</th>
+                    <th style="white-space: nowrap;">Asset Name</th>
+                    <th style="white-space: nowrap;">Asset Type</th>
+                    <th style="white-space: nowrap;">Serial Number</th>
+                    <th style="white-space: nowrap;">Inventory No</th>
+                    <th style="white-space: nowrap;">User Name</th>
+                    <th style="white-space: nowrap;">Manufacturer</th>
+                    <th style="white-space: nowrap;">Model</th>
+                    <th style="white-space: nowrap;">Status</th>
+
+
+                </tr>
+            </thead>
+            <tbody style="white-space: nowrap;">
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
